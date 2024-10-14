@@ -37,7 +37,7 @@ def simulate_random_motion(initial_velocity, base_acceleration, time_step, total
     return df
 
 # Streamlit app
-st.image("https://github.com/kolbm/Dynamics-Simulator/blob/main/logo.jpg")
+st.image("https://github.com/kolbm/Dynamics-Simulator/blob/main/logo.jpg?raw=true")
 st.title("Mr. Kolb's Dynamics Simulator")
 
 # Inputs for the simulation
