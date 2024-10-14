@@ -37,7 +37,8 @@ def simulate_random_motion(initial_velocity, base_acceleration, time_step, total
     return df
 
 # Streamlit app
-st.title('Mr. Kolb Presents Randomized Object Motion Simulator')
+st.image("https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/3856/2022/12/19152835/dunellen_logo-removebg-preview.png", width=150)
+st.title("Mr. Kolb's Dynamics Simulator")
 
 # Inputs for the simulation
 initial_velocity = st.number_input('Initial Velocity (m/s)', value=0.0)
@@ -61,6 +62,26 @@ if st.button('Simulate Randomized Motion'):
     plt.xlabel('Time (s)')
     plt.ylabel('Position (m)')
     plt.title('Randomized Object Position Over Time')
+    plt.grid(True)
+    st.pyplot(plt)
+
+    # Plot the velocity vs time
+    st.subheader('Velocity vs Time')
+    plt.figure(figsize=(8, 5))
+    plt.plot(df['Time (s)'], df['Velocity (m/s)'], label='Velocity (m/s)', color='orange')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Velocity (m/s)')
+    plt.title('Randomized Object Velocity Over Time')
+    plt.grid(True)
+    st.pyplot(plt)
+
+    # Plot the acceleration vs time
+    st.subheader('Acceleration vs Time')
+    plt.figure(figsize=(8, 5))
+    plt.plot(df['Time (s)'], df['Acceleration (m/s²)'], label='Acceleration (m/s²)', color='green')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Acceleration (m/s²)')
+    plt.title('Randomized Object Acceleration Over Time')
     plt.grid(True)
     st.pyplot(plt)
 
