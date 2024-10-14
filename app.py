@@ -37,7 +37,7 @@ def simulate_random_motion(initial_velocity, base_acceleration, time_step, total
     return df
 
 # Streamlit app
-st.title('Mr. Kolb's Randomized Object Motion Simulator')
+st.title('Mr. Kolb Presents Randomized Object Motion Simulator')
 
 # Inputs for the simulation
 initial_velocity = st.number_input('Initial Velocity (m/s)', value=0.0)
