@@ -98,7 +98,7 @@ else:
     if calculated_fall_time is None:
         st.error("The drop height or initial velocity results in no real solution. Please adjust your parameters.")
     else:
-        st.write(f'Calculated fall time (no randomness): {calculated_fall_time:.2f} seconds')
+        st.markdown(f'**Calculated fall time (no randomness): {calculated_fall_time:.2f} seconds**')
 
 # Checkbox for enabling/disabling randomness
 use_randomness = st.checkbox('Include randomness in acceleration', value=True)
@@ -120,11 +120,11 @@ else:
         st.write(df)
 
         if simulated_fall_time is not None:
-            st.write(f'Simulated fall time (with randomness): {simulated_fall_time:.2f} seconds')
+            st.markdown(f'**Simulated fall time (with randomness): {simulated_fall_time:.2f} seconds**')
 
             # Display the difference between calculated and simulated fall times
             fall_time_difference = abs(calculated_fall_time - simulated_fall_time)
-            st.write(f'Difference between calculated and simulated fall time: {fall_time_difference:.2f} seconds')
+            st.markdown(f'**Difference between calculated and simulated fall time: {fall_time_difference:.2f} seconds**')
         else:
             st.write("The object never hit the ground within the simulated time.")
 
