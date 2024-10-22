@@ -4,17 +4,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import random
 
-# Dictionary for gravitational accelerations on different planets
+# Dictionary for gravitational accelerations on different planets (all negative for downward direction)
 planetary_gravity = {
-    'Mercury': 3.7,
-    'Venus': 8.87,
-    'Earth': 9.81,
-    'Moon': 1.62,
-    'Mars': 3.71,
-    'Jupiter': 24.79,
-    'Saturn': 10.44,
-    'Uranus': 8.69,
-    'Neptune': 11.15,
+    'Mercury': -3.7,
+    'Venus': -8.87,
+    'Earth': -9.81,
+    'Moon': -1.62,
+    'Mars': -3.71,
+    'Jupiter': -24.79,
+    'Saturn': -10.44,
+    'Uranus': -8.69,
+    'Neptune': -11.15,
     'Other (Custom)': None  # This option will allow custom input
 }
 
@@ -60,15 +60,15 @@ initial_velocity = st.number_input('Initial Velocity (m/s)', value=0.0, help="Th
 time_step = st.number_input('Time Step (s)', value=0.1, help="The interval for calculating the object's position, velocity, and acceleration.")
 total_time = st.number_input('Total Time (s)', value=10.0, help="The total duration for the simulation in seconds.")
 
-# Drop-down for planetary gravitational acceleration
+# Drop-down for planetary gravitational acceleration (all accelerations are downward)
 planet = st.selectbox('Select a planet or choose "Other" for custom acceleration:', list(planetary_gravity.keys()))
 
 # Set the base acceleration based on planet selection
 if planet == 'Other (Custom)':
-    base_acceleration = st.number_input('Custom Acceleration (m/s²)', value=9.81, help="Enter a custom acceleration.")
+    base_acceleration = st.number_input('Custom Acceleration (m/s²)', value=-9.81, help="Enter a custom acceleration. Default is -9.81 m/s² for Earth-like gravity.")
 else:
     base_acceleration = planetary_gravity[planet]
-    st.write(f'Gravitational acceleration on {planet}: {base_acceleration} m/s²')
+    st.write(f'Downward gravitational acceleration on {planet}: {base_acceleration} m/s²')
 
 # Checkbox for enabling/disabling randomness
 use_randomness = st.checkbox('Include randomness in acceleration', value=True)
