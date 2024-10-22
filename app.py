@@ -30,7 +30,7 @@ def calculate_fall_time(height, initial_velocity, acceleration):
     # Take the positive time (t2 in most cases due to downward acceleration)
     return max(t1, t2)
 
-# Function to simulate motion with randomization
+# Function to simulate motion with randomization and calculate the fall time
 def simulate_random_motion(initial_velocity, base_acceleration, time_step, total_time, randomness_factor):
     times = np.arange(0, total_time + time_step, time_step)
     positions = []
@@ -39,7 +39,8 @@ def simulate_random_motion(initial_velocity, base_acceleration, time_step, total
     
     current_position = 0
     current_velocity = initial_velocity
-    
+    fall_time = None
+
     for t in times:
         # Randomize the acceleration if randomness is applied
         random_acceleration = base_acceleration + random.uniform(-randomness_factor, randomness_factor)
@@ -51,6 +52,18 @@ def simulate_random_motion(initial_velocity, base_acceleration, time_step, total
         
         current_position += current_velocity * time_step
         positions.append(current_position)
+
+        # Check if object has hit the ground (position <= 0)
+        if current_position <= 0:
+            fall_time = t
+            break  # Stop the simulation when the object hits the ground
+    
+    # Trim arrays to the actual fall time
+    if fall_time is not None:
+        times = times[:len(positions)]
+        positions = positions[:len(positions)]
+        velocities = velocities[:len(velocities)]
+        accelerations = accelerations[:len(accelerations)]
     
     # Create a DataFrame
     data = {
@@ -60,7 +73,7 @@ def simulate_random_motion(initial_velocity, base_acceleration, time_step, total
         'Acceleration (m/s²)': accelerations
     }
     df = pd.DataFrame(data)
-    return df
+    return df, fall_time
 
 # Streamlit app
 st.image("https://github.com/kolbm/Dynamics-Simulator/blob/main/logo.jpg?raw=true")
@@ -80,8 +93,8 @@ else:
     base_acceleration = planetary_gravity[planet]
     st.write(f'Downward gravitational acceleration on {planet}: {base_acceleration} m/s²')
 
-# Option to choose between time or height input
-input_method = st.radio("Choose input method:", options=["Time", "Height"])
+# Option to choose between time or height input (default to "Height")
+input_method = st.radio("Choose input method:", options=["Height", "Time"], index=0)
 
 if input_method == "Time":
     total_time = st.number_input('Total Time (s)', value=10.0, help="The total duration for the simulation in seconds.")
@@ -106,11 +119,16 @@ elif total_time is not None and total_time <= 0:
 else:
     # Run the simulation
     if st.button('Simulate Motion'):
-        df = simulate_random_motion(initial_velocity, base_acceleration, time_step, total_time, randomness_factor if use_randomness else 0.0)
+        df, fall_time = simulate_random_motion(initial_velocity, base_acceleration, time_step, total_time, randomness_factor if use_randomness else 0.0)
 
         # Display the DataFrame
         st.subheader('Simulation Data')
         st.write(df)
+
+        if fall_time is not None:
+            st.write(f'Total fall time: {fall_time:.2f} seconds (after randomization)')
+        else:
+            st.write("The object never hit the ground within the simulated time.")
 
         # Plot the position vs time
         st.subheader('Position vs Time')
