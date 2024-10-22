@@ -46,25 +46,18 @@ def simulate_random_motion(initial_velocity, base_acceleration, time_step, total
         random_acceleration = base_acceleration + random.uniform(-randomness_factor, randomness_factor)
         accelerations.append(random_acceleration)
         
-        # Update velocity and position
+        # Update velocity and position only if the object is above the ground
         current_velocity += random_acceleration * time_step
         velocities.append(current_velocity)
         
-        current_position += current_velocity * time_step
+        if current_position > 0:
+            current_position += current_velocity * time_step
+            if current_position <= 0 and fall_time is None:
+                fall_time = t  # Record the time when the object hits the ground
+            current_position = max(0, current_position)  # Ensure position does not go below zero
+        
         positions.append(current_position)
 
-        # Check if object has hit the ground (position <= 0)
-        if current_position <= 0:
-            fall_time = t
-            break  # Stop the simulation when the object hits the ground
-    
-    # Trim arrays to the actual fall time
-    if fall_time is not None:
-        times = times[:len(positions)]
-        positions = positions[:len(positions)]
-        velocities = velocities[:len(velocities)]
-        accelerations = accelerations[:len(accelerations)]
-    
     # Create a DataFrame
     data = {
         'Time (s)': times,
