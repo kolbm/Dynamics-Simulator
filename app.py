@@ -107,8 +107,8 @@ else:
 use_randomness = st.checkbox('Include randomness in acceleration', value=True)
 randomness_factor = st.number_input('Randomness Factor (m/s²)', value=1.0 if use_randomness else 0.0, disabled=not use_randomness, help="Adds variability to the acceleration. Set to 0 for deterministic motion.")
 
-# Error handling: Ensure time_step and total_time are positive
-time_step = st.number_input('Time Step (s)', value=0.1, help="The interval for calculating the object's position, velocity, and acceleration.")
+# Default time step set to 0.001
+time_step = st.number_input('Time Step (s)', value=0.001, help="The interval for calculating the object's position, velocity, and acceleration.")
 if time_step <= 0:
     st.error("Time step must be a positive value.")
 elif calculated_fall_time is not None and calculated_fall_time <= 0:
