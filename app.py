@@ -31,7 +31,7 @@ def calculate_fall_time(height, initial_velocity, acceleration):
     return max(t1, t2)
 
 # Function to simulate motion with randomization and calculate the fall time
-def simulate_random_motion(initial_velocity, base_acceleration, time_step, randomness_factor, start_height):
+def simulate_random_motion(initial_velocity, base_acceleration, time_step, randomness_percentage, start_height):
     times = []
     positions = []
     velocities = []
@@ -45,7 +45,8 @@ def simulate_random_motion(initial_velocity, base_acceleration, time_step, rando
     while current_position > 0:  # Simulate until the object reaches the ground
         times.append(t)
 
-        # Randomize the acceleration if randomness is applied
+        # Apply randomness as a percentage of the base acceleration
+        randomness_factor = (randomness_percentage / 100) * abs(base_acceleration)
         random_acceleration = base_acceleration + random.uniform(-randomness_factor, randomness_factor)
         accelerations.append(random_acceleration)
         
@@ -105,10 +106,10 @@ else:
 
 # Checkbox for enabling/disabling randomness
 use_randomness = st.checkbox('Include randomness in acceleration', value=True)
-randomness_factor = st.number_input('Randomness Factor (m/s²)', value=1.0 if use_randomness else 0.0, disabled=not use_randomness, help="Adds variability to the acceleration. Set to 0 for deterministic motion.")
+randomness_percentage = st.slider('Randomness Percentage of Gravity (%)', 0, 100, 10 if use_randomness else 0, help="Adjusts the percentage variability of the gravitational acceleration.")
 
-# Default time step set to 0.001
-time_step = st.number_input('Time Step (s)', value=0.001, help="The interval for calculating the object's position, velocity, and acceleration.")
+# Default time step set to 0.01
+time_step = st.number_input('Time Step (s)', value=0.01, help="The interval for calculating the object's position, velocity, and acceleration.")
 if time_step <= 0:
     st.error("Time step must be a positive value.")
 elif calculated_fall_time is not None and calculated_fall_time <= 0:
@@ -116,7 +117,7 @@ elif calculated_fall_time is not None and calculated_fall_time <= 0:
 else:
     # Run the simulation
     if st.button('Simulate Motion'):
-        df, simulated_fall_time = simulate_random_motion(initial_velocity, base_acceleration, time_step, randomness_factor if use_randomness else 0.0, start_height)
+        df, simulated_fall_time = simulate_random_motion(initial_velocity, base_acceleration, time_step, randomness_percentage if use_randomness else 0.0, start_height)
 
         # Display the DataFrame
         st.subheader('Simulation Data')
