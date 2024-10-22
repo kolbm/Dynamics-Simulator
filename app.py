@@ -31,8 +31,8 @@ def calculate_fall_time(height, initial_velocity, acceleration):
     return max(t1, t2)
 
 # Function to simulate motion with randomization and calculate the fall time
-def simulate_random_motion(initial_velocity, base_acceleration, time_step, total_time, randomness_factor, start_height):
-    times = np.arange(0, total_time + time_step, time_step)
+def simulate_random_motion(initial_velocity, base_acceleration, time_step, randomness_factor, start_height):
+    times = []
     positions = []
     velocities = []
     accelerations = []
@@ -40,23 +40,26 @@ def simulate_random_motion(initial_velocity, base_acceleration, time_step, total
     current_position = start_height  # Start at the designated height
     current_velocity = initial_velocity
     fall_time = None
+    t = 0  # Starting time
 
-    for t in times:
+    while current_position > 0:  # Simulate until the object reaches the ground
+        times.append(t)
+
         # Randomize the acceleration if randomness is applied
         random_acceleration = base_acceleration + random.uniform(-randomness_factor, randomness_factor)
         accelerations.append(random_acceleration)
         
-        # Update velocity and position only if the object is above the ground
+        # Update velocity and position
         current_velocity += random_acceleration * time_step
         velocities.append(current_velocity)
         
-        if current_position > 0:
-            current_position += current_velocity * time_step
-            if current_position <= 0 and fall_time is None:
-                fall_time = t  # Record the time when the object hits the ground
-            current_position = max(0, current_position)  # Ensure position does not go below zero
-        
+        current_position += current_velocity * time_step
+        current_position = max(0, current_position)  # Ensure position does not go below zero
         positions.append(current_position)
+        
+        t += time_step  # Increment time
+
+    fall_time = t  # Record the time when the object hits the ground
 
     # Create a DataFrame
     data = {
@@ -113,7 +116,7 @@ elif calculated_fall_time is not None and calculated_fall_time <= 0:
 else:
     # Run the simulation
     if st.button('Simulate Motion'):
-        df, simulated_fall_time = simulate_random_motion(initial_velocity, base_acceleration, time_step, calculated_fall_time, randomness_factor if use_randomness else 0.0, start_height)
+        df, simulated_fall_time = simulate_random_motion(initial_velocity, base_acceleration, time_step, randomness_factor if use_randomness else 0.0, start_height)
 
         # Display the DataFrame
         st.subheader('Simulation Data')
