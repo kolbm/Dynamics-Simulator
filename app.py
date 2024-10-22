@@ -31,13 +31,13 @@ def calculate_fall_time(height, initial_velocity, acceleration):
     return max(t1, t2)
 
 # Function to simulate motion with randomization and calculate the fall time
-def simulate_random_motion(initial_velocity, base_acceleration, time_step, total_time, randomness_factor):
+def simulate_random_motion(initial_velocity, base_acceleration, time_step, total_time, randomness_factor, start_height):
     times = np.arange(0, total_time + time_step, time_step)
     positions = []
     velocities = []
     accelerations = []
     
-    current_position = 0
+    current_position = start_height  # Start at the designated height
     current_velocity = initial_velocity
     fall_time = None
 
@@ -91,9 +91,10 @@ input_method = st.radio("Choose input method:", options=["Height", "Time"], inde
 
 if input_method == "Time":
     total_time = st.number_input('Total Time (s)', value=10.0, help="The total duration for the simulation in seconds.")
+    start_height = 0  # Default start height is zero if time-based input is used
 else:
-    height = st.number_input('Drop Height (m)', value=10.0, help="The height from which the object is dropped.")
-    total_time = calculate_fall_time(height, initial_velocity, base_acceleration)
+    start_height = st.number_input('Drop Height (m)', value=10.0, help="The height from which the object is dropped.")
+    total_time = calculate_fall_time(start_height, initial_velocity, base_acceleration)
     if total_time is None:
         st.error("The drop height or initial velocity results in no real solution. Please adjust your parameters.")
     else:
@@ -112,7 +113,7 @@ elif total_time is not None and total_time <= 0:
 else:
     # Run the simulation
     if st.button('Simulate Motion'):
-        df, fall_time = simulate_random_motion(initial_velocity, base_acceleration, time_step, total_time, randomness_factor if use_randomness else 0.0)
+        df, fall_time = simulate_random_motion(initial_velocity, base_acceleration, time_step, total_time, randomness_factor if use_randomness else 0.0, start_height)
 
         # Display the DataFrame
         st.subheader('Simulation Data')
