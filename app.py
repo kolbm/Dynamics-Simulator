@@ -94,11 +94,11 @@ if input_method == "Time":
     start_height = 0  # Default start height is zero if time-based input is used
 else:
     start_height = st.number_input('Drop Height (m)', value=10.0, help="The height from which the object is dropped.")
-    total_time = calculate_fall_time(start_height, initial_velocity, base_acceleration)
-    if total_time is None:
+    calculated_fall_time = calculate_fall_time(start_height, initial_velocity, base_acceleration)
+    if calculated_fall_time is None:
         st.error("The drop height or initial velocity results in no real solution. Please adjust your parameters.")
     else:
-        st.write(f'Calculated fall time: {total_time:.2f} seconds')
+        st.write(f'Calculated fall time (no randomness): {calculated_fall_time:.2f} seconds')
 
 # Checkbox for enabling/disabling randomness
 use_randomness = st.checkbox('Include randomness in acceleration', value=True)
@@ -108,19 +108,23 @@ randomness_factor = st.number_input('Randomness Factor (m/s²)', value=1.0 if us
 time_step = st.number_input('Time Step (s)', value=0.1, help="The interval for calculating the object's position, velocity, and acceleration.")
 if time_step <= 0:
     st.error("Time step must be a positive value.")
-elif total_time is not None and total_time <= 0:
+elif calculated_fall_time is not None and calculated_fall_time <= 0:
     st.error("Total time must be a positive value.")
 else:
     # Run the simulation
     if st.button('Simulate Motion'):
-        df, fall_time = simulate_random_motion(initial_velocity, base_acceleration, time_step, total_time, randomness_factor if use_randomness else 0.0, start_height)
+        df, simulated_fall_time = simulate_random_motion(initial_velocity, base_acceleration, time_step, calculated_fall_time, randomness_factor if use_randomness else 0.0, start_height)
 
         # Display the DataFrame
         st.subheader('Simulation Data')
         st.write(df)
 
-        if fall_time is not None:
-            st.write(f'Total fall time: {fall_time:.2f} seconds (after randomization)')
+        if simulated_fall_time is not None:
+            st.write(f'Simulated fall time (with randomness): {simulated_fall_time:.2f} seconds')
+
+            # Display the difference between calculated and simulated fall times
+            fall_time_difference = abs(calculated_fall_time - simulated_fall_time)
+            st.write(f'Difference between calculated and simulated fall time: {fall_time_difference:.2f} seconds')
         else:
             st.write("The object never hit the ground within the simulated time.")
 
