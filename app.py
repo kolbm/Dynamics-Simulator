@@ -43,7 +43,7 @@ st.title("Mr. Kolb's Dynamics Simulator")
 # Inputs for the simulation with clarifications
 st.subheader("Simulation Parameters")
 initial_velocity = st.number_input('Initial Velocity (m/s)', value=0.0, help="The velocity of the object at time zero.")
-base_acceleration = st.number_input('Base Acceleration (m/s²)', value=9.81, help="The average acceleration applied to the object.")
+base_acceleration = st.number_input('Base Acceleration (m/s²)', value=-10.0, help="The average acceleration applied to the object. Default is -10 m/s² for simulating gravity.")
 time_step = st.number_input('Time Step (s)', value=0.1, help="The interval for calculating the object's position, velocity, and acceleration.")
 total_time = st.number_input('Total Time (s)', value=10.0, help="The total duration for the simulation in seconds.")
 
